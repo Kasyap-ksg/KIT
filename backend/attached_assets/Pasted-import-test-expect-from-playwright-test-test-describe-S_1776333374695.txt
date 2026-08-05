@@ -1,0 +1,108 @@
+import { test, expect } from '@playwright/test';
+
+test.describe('[Scenario 1] Company lookup successful', () => {
+  test.beforeEach(async ({ page }) => {
+    try {
+      await page.goto('https://hilton--qa.sandbox.my.site.com/s/request-access');
+      await page.waitForTimeout(3000);
+      await page.waitForLoadState('domcontentloaded');
+      await page.screenshot({ path: 'step_1_page_loaded.png' });
+
+      const optionLocator = page.locator('text=I am new to Hilton and I don’t have Lobby credentials');
+      await optionLocator.waitFor({ state: 'visible', timeout: 15000 });
+      await optionLocator.click();
+      await page.screenshot({ path: 'step_2_option_selected.png' });
+    } catch (error) {
+      await page.screenshot({ path: 'error_before_each.png' });
+      throw error;
+    }
+  });
+
+  test('Successful registration with all valid data', async ({ page }) => {
+    try {
+      const firstNameInput = page.locator('[placeholder="First Name"]');
+      await firstNameInput.waitFor({ state: 'visible', timeout: 15000 });
+      await firstNameInput.fill('John');
+      await page.screenshot({ path: 'step_3_first_name_filled.png' });
+    } catch {
+      await page.screenshot({ path: 'step_3_first_name_skipped.png' });
+    }
+
+    try {
+      const lastNameInput = page.locator('[placeholder="Last Name"]');
+      await lastNameInput.waitFor({ state: 'visible', timeout: 15000 });
+      await lastNameInput.fill('Doe');
+      await page.screenshot({ path: 'step_4_last_name_filled.png' });
+    } catch {
+      await page.screenshot({ path: 'step_4_last_name_skipped.png' });
+    }
+
+    try {
+      const emailInput = page.locator('[placeholder="Email"]');
+      await emailInput.waitFor({ state: 'visible', timeout: 15000 });
+      await emailInput.fill('john.doe@example.com');
+      await page.screenshot({ path: 'step_5_email_filled.png' });
+    } catch {
+      await page.screenshot({ path: 'step_5_email_skipped.png' });
+    }
+
+    try {
+      const phoneInput = page.locator('[placeholder="Phone"]');
+      await phoneInput.waitFor({ state: 'visible', timeout: 15000 });
+      await phoneInput.fill('+1234567890');
+      await page.screenshot({ path: 'step_6_phone_filled.png' });
+    } catch {
+      await page.screenshot({ path: 'step_6_phone_skipped.png' });
+    }
+
+    try {
+      const roleInput = page.locator('[placeholder="Role/Title"]');
+      await roleInput.waitFor({ state: 'visible', timeout: 15000 });
+      await roleInput.fill('Project Manager');
+      await page.screenshot({ path: 'step_7_role_filled.png' });
+    } catch {
+      await page.screenshot({ path: 'step_7_role_skipped.png' });
+    }
+
+    try {
+      const searchInput = page.locator('[placeholder="Search"]');
+      await searchInput.waitFor({ state: 'visible', timeout: 15000 });
+      await searchInput.fill('Hilton Worldwide');
+      await page.screenshot({ path: 'step_8_search_filled.png' });
+
+      const searchButton = page.locator('button:has-text("Search")');
+      await searchButton.waitFor({ state: 'visible', timeout: 15000 });
+      await searchButton.click();
+      await page.screenshot({ path: 'step_9_search_clicked.png' });
+    } catch {
+      await page.screenshot({ path: 'step_9_search_skipped.png' });
+    }
+
+    try {
+      const companyResult = page.locator('text=Hilton Worldwide').first();
+      await companyResult.waitFor({ state: 'visible', timeout: 15000 });
+      await companyResult.click();
+      await page.screenshot({ path: 'step_10_company_selected.png' });
+    } catch {
+      await page.screenshot({ path: 'step_10_company_skipped.png' });
+    }
+
+    try {
+      const submitButton = page.locator('button:has-text("Submit")');
+      await submitButton.waitFor({ state: 'visible', timeout: 15000 });
+      await submitButton.click();
+      await page.screenshot({ path: 'step_11_submit_clicked.png' });
+    } catch {
+      await page.screenshot({ path: 'step_11_submit_skipped.png' });
+    }
+
+    try {
+      const confirmationMessage = page.locator('text=Thank You for your request');
+      await confirmationMessage.waitFor({ state: 'visible', timeout: 15000 });
+      expect.soft(await confirmationMessage.isVisible()).toBeTruthy();
+      await page.screenshot({ path: 'step_12_confirmation_message.png' });
+    } catch {
+      await page.screenshot({ path: 'step_12_confirmation_skipped.png' });
+    }
+  });
+});

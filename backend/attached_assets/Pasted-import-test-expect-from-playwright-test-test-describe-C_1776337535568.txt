@@ -1,0 +1,91 @@
+import { test, expect } from '@playwright/test';
+
+test.describe('Company lookup for unauthenticated users in OP Portal', () => {
+    test.beforeEach(async ({ page }) => {
+        await page.goto('https://hilton--qa.sandbox.my.site.com/s/request-access', { waitUntil: 'domcontentloaded', timeout: 30000 });
+    });
+
+    test('Successful company lookup and request submission', async ({ page }) => {
+        await page.locator('label').filter({ hasText: "I am new to Hilton and I don't have Lobby credentials" }).click();
+        await page.getByLabel('First_Name').fill('John');
+        await page.getByLabel('Last_Name').fill('Doe');
+        await page.getByLabel('Contact_Phone_Number').fill('1234567890');
+        await page.getByLabel('Email_Address').fill('john.doe@example.com');
+        await page.getByLabel('Confirm_Email_Address').fill('john.doe@example.com');
+        await page.getByLabel('Title').fill('Owner');
+        await page.getByRole('button', { name: 'Search' }).click();
+
+        // Add logic to select a company from results, assuming it appears after search
+        await expect(page.locator('text=Company Name')).toBeVisible({ timeout: 30000 }); // Replace 'Company Name' with actual expected text
+        await page.locator('text=Company Name').click(); // Click on the selected company
+
+        await page.getByRole('button', { name: 'Submit' }).click();
+        await expect(page.getByRole('heading', { name: 'Thank You' })).toBeVisible({ timeout: 30000 });
+    });
+
+    test('Company lookup with empty required fields', async ({ page }) => {
+        await page.locator('label').filter({ hasText: "I am new to Hilton and I don't have Lobby credentials" }).click();
+        await page.getByLabel('First_Name').fill('');
+        await page.getByLabel('Last_Name').fill('');
+        await page.getByLabel('Contact_Phone_Number').fill('');
+        await page.getByLabel('Email_Address').fill('');
+        await page.getByLabel('Confirm_Email_Address').fill('');
+        await page.getByLabel('Title').fill('');
+        await page.getByRole('button', { name: 'Search' }).click();
+        
+        await expect(page.locator('text=Please fill in all required fields.')).toBeVisible({ timeout: 30000 });
+    });
+
+    test('Company lookup with invalid email address', async ({ page }) => {
+        await page.locator('label').filter({ hasText: "I am new to Hilton and I don't have Lobby credentials" }).click();
+        await page.getByLabel('Email_Address').fill('john.doeexample.com');
+        await page.getByLabel('Confirm_Email_Address').fill('john.doe@example.com');
+        await page.getByRole('button', { name: 'Search' }).click();
+
+        await expect(page.locator('text=Email addresses do not match.')).toBeVisible({ timeout: 30000 });
+    });
+
+    test('Company lookup redirects to the wrong page', async ({ page }) => {
+        await page.locator('label').filter({ hasText: "I am new to Hilton and I don't have Lobby credentials" }).click();
+        await page.getByLabel('First_Name').fill('John');
+        await page.getByLabel('Last_Name').fill('Doe');
+        await page.getByLabel('Contact_Phone_Number').fill('9876543210');
+        await page.getByLabel('Email_Address').fill('john.doe@example.com');
+        await page.getByLabel('Confirm_Email_Address').fill('john.doe@example.com');
+        await page.getByLabel('Title').fill('Owner');
+        await page.getByRole('button', { name: 'Search' }).click();
+
+        // Add logic to select a company from results
+        await expect(page.locator('text=Company Name')).toBeVisible({ timeout: 30000 }); // Replace 'Company Name' with actual expected text
+        await page.locator('text=Company Name').click(); // Click on the selected company
+
+        await page.getByRole('button', { name: 'Submit' }).click();
+        await expect(page.getByRole('heading', { name: 'Thank You' })).toBeVisible({ timeout: 30000 });
+    });
+
+    test('Company name not found in search results', async ({ page }) => {
+        await page.locator('label').filter({ hasText: "I am new to Hilton and I don't have Lobby credentials" }).click();
+        await page.getByLabel('First_Name').fill('Alice');
+        await page.getByLabel('Last_Name').fill('Smith');
+        await page.getByLabel('Contact_Phone_Number').fill('1122334455');
+        await page.getByLabel('Email_Address').fill('alice.smith@example.com');
+        await page.getByLabel('Confirm_Email_Address').fill('alice.smith@example.com');
+        await page.getByLabel('Title').fill('Manager');
+        await page.getByRole('button', { name: 'Search' }).click();
+
+        await expect(page.locator('text=No results found for your query.')).toBeVisible({ timeout: 30000 });
+    });
+
+    test('Cancellation of request process', async ({ page }) => {
+        await page.locator('label').filter({ hasText: "I am new to Hilton and I don't have Lobby credentials" }).click();
+        await page.getByLabel('First_Name').fill('Bob');
+        await page.getByLabel('Last_Name').fill('Brown');
+        await page.getByLabel('Contact_Phone_Number').fill('2233445566');
+        await page.getByLabel('Email_Address').fill('bob.brown@example.com');
+        await page.getByLabel('Confirm_Email_Address').fill('bob.brown@example.com');
+        await page.getByLabel('Title').fill('Executive');
+        await page.getByRole('button', { name: 'Close' }).click();
+
+        await expect(page.locator('label').filter({ hasText: "I am new to Hilton and I don't have Lobby credentials" })).toBeVisible({ timeout: 30000 });
+    });
+});

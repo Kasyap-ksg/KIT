@@ -1,0 +1,103 @@
+Navigating to application...
+Crawling page DOM...
+DOM crawled, starting tests...
+Scenario 1/5: Successful registration with all valid data
+S1 Step 1/12: I navigate to "https://hilton--qa.sandbox.my.site.com/s/request-access"
+✓ Navigated
+S1 Step 2/12: I select the option "I am new to Hilton and I dont have Lobby credentials"
+✓ Clicked: I am new to Hilton and I dont
+S1 Step 3/12: I enter "John" into the "First Name" field
+✓ Filled: First Name
+S1 Step 4/12: I enter "Doe" into the "Last Name" field
+✓ Filled: Last Name
+S1 Step 5/12: I enter "john.doe@example.com" into the "Email" field
+✓ Filled: Email
+S1 Step 6/12: I enter "+1234567890" into the "Phone" field
+✓ Filled: Phone
+S1 Step 7/12: I enter "Senior Manager" into the "Job Title" field
+✓ Filled: Job Title
+S1 Step 8/12: I enter "Hilton Worldwide" into the "Search" input
+✓ Filled: Search
+S1 Step 9/12: I click the "Search" button
+✓ Clicked: Search
+S1 Step 10/12: I select company "Hilton Worldwide" from the search results
+✗ Error: Locator.click: Timeout 15000ms exceeded.
+S1 Step 11/12: I click the "Submit" button
+✓ Clicked: Submit
+S1 Step 12/12: I should see a confirmation message "Thank You for Your Request"
+✗ Not found: Thank You for Your Request
+Scenario 1: FAILED
+Scenario 2/5: Submit with missing required fields shows validation errors
+S2 Step 1/9: I navigate to "https://hilton--qa.sandbox.my.site.com/s/request-access"
+✓ Navigated
+S2 Step 2/9: I select the option "I am new to Hilton and I dont have Lobby credentials"
+✓ Clicked: I am new to Hilton and I dont
+S2 Step 3/9: I leave the "First Name" field empty
+✓ Filled: First Name
+S2 Step 4/9: I leave the "Last Name" field empty
+✓ Filled: Last Name
+S2 Step 5/9: I leave the "Email" field empty
+✓ Filled: Email
+S2 Step 6/9: I leave the "Phone" field empty
+✓ Filled: Phone
+S2 Step 7/9: I leave the "Job Title" field empty
+✓ Filled: Job Title
+S2 Step 8/9: I click the "Submit" button
+✓ Clicked: Submit
+S2 Step 9/9: I should see validation error messages for all required fields
+✗ Not found: I should see validation error messages f
+Scenario 2: FAILED
+Scenario 3/5: Invalid email format is rejected
+S3 Step 1/12: I navigate to "https://hilton--qa.sandbox.my.site.com/s/request-access"
+✓ Navigated
+S3 Step 2/12: I select the option "I am new to Hilton and I dont have Lobby credentials"
+✓ Clicked: I am new to Hilton and I dont
+S3 Step 3/12: I enter "Jane" into the "First Name" field
+✓ Filled: First Name
+S3 Step 4/12: I enter "Smith" into the "Last Name" field
+✓ Filled: Last Name
+S3 Step 5/12: I enter "notanemail" into the "Email" field
+✓ Filled: Email
+S3 Step 6/12: I enter "+1987654321" into the "Phone" field
+✓ Filled: Phone
+S3 Step 7/12: I enter "Director" into the "Job Title" field
+✓ Filled: Job Title
+S3 Step 8/12: I enter "Hilton Worldwide" into the "Search" input
+✓ Filled: Search
+S3 Step 9/12: I click the "Search" button
+✓ Clicked: Search
+S3 Step 10/12: I select company "Hilton Worldwide" from the search results
+✗ Error: Locator.click: Timeout 15000ms exceeded.
+S3 Step 11/12: I click the "Submit" button
+✓ Clicked: Submit
+S3 Step 12/12: I should see a validation error message "Enter a valid email address"
+✓ Found: Enter a valid email address
+Scenario 3: FAILED
+Scenario 4/5: Invalid phone number is rejected
+S4 Step 1/12: I navigate to "https://hilton--qa.sandbox.my.site.com/s/request-access"
+✓ Navigated
+S4 Step 2/12: I select the option "I am new to Hilton and I dont have Lobby credentials"
+✓ Clicked: I am new to Hilton and I dont
+S4 Step 3/12: I enter "Alice" into the "First Name" field
+✓ Filled: First Name
+S4 Step 4/12: I enter "Johnson" into the "Last Name" field
+✓ Filled: Last Name
+S4 Step 5/12: I enter "alice.johnson@example.com" into the "Email" field
+✓ Filled: Email
+S4 Step 6/12: I enter "abc" into the "Phone" field
+✓ Filled: Phone
+S4 Step 7/12: I enter "HR Specialist" into the "Job Title" field
+✓ Filled: Job Title
+S4 Step 8/12: I enter "Hilton Worldwide" into the "Search" input
+✓ Filled: Search
+S4 Step 9/12: I click the "Search" button
+✓ Clicked: Search
+S4 Step 10/12: I select company "Hilton Worldwide" from the search results
+✗ Error: Locator.click: Timeout 15000ms exceeded.
+S4 Step 11/12: I click the "Submit" button
+✓ Clicked: Submit
+S4 Step 12/12: I should see a validation error message "Enter a valid phone number"
+✗ Not found: Enter a valid phone number
+Scenario 4: FAILED
+Scenario 5/5: Successful registration with alternate valid data
+S5 Step 1/12: I navigate to "https://hilton--qa.sandbox.my.site.com/s/request-access"

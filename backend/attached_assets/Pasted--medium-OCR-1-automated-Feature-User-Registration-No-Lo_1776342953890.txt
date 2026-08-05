@@ -1,0 +1,67 @@
+@medium @OCR-1 @automated
+Feature: User Registration - No Lobby Credentials
+  Unauthenticated users should be able to register for access when they do not have Lobby credentials.
+
+  Background:
+    Given I navigate to "https://hilton--qa.sandbox.my.site.com/s/request-access"
+    And I select the "I am new to Hilton and I don't have Lobby credentials" option
+    And the registration form is displayed
+
+  Scenario: Successful submission with all required data (happy path)
+    When I type "John" into the "First Name" field
+    And I type "Doe" into the "Last Name" field
+    And I type "john.doe@example.com" into the "Email" field
+    And I type "john.doe@example.com" into the "Confirm Email" field
+    And I type "+15551234567" into the "Phone" field
+    And I type "IT Manager" into the "Job Title" field
+    And I type "Hilton Worldwide" into the "139:0" field
+    And I click the "Search" button
+    And I select "Hilton Worldwide" from the company search results
+    And I click the "Submit" button
+    Then I should see a confirmation message that my request has been submitted successfully
+
+  Scenario: Submission blocked when required fields are missing
+    When I leave the "First Name" field blank
+    And I type "Smith" into the "Last Name" field
+    And I type "sam.smith@example.com" into the "Email" field
+    And I type "sam.smith@example.com" into the "Confirm Email" field
+    And I type "+15557654321" into the "Phone" field
+    And I type "Analyst" into the "Job Title" field
+    And I type "Hilton Worldwide" into the "139:0" field
+    And I click the "Submit" button
+    Then I should see a validation message indicating that the "First Name" field is required
+
+  Scenario: Submission blocked for invalid email address
+    When I type "Emily" into the "First Name" field
+    And I type "Clark" into the "Last Name" field
+    And I type "notanemail" into the "Email" field
+    And I type "notanemail" into the "Confirm Email" field
+    And I type "+15559876543" into the "Phone" field
+    And I type "Sales Lead" into the "Job Title" field
+    And I type "Hilton Worldwide" into the "139:0" field
+    And I click the "Submit" button
+    Then I should see a validation message indicating that the email format is invalid
+
+  Scenario: Submission blocked for invalid phone number
+    When I type "Robert" into the "First Name" field
+    And I type "Johnson" into the "Last Name" field
+    And I type "robert.johnson@example.com" into the "Email" field
+    And I type "robert.johnson@example.com" into the "Confirm Email" field
+    And I type "abc" into the "Phone" field
+    And I type "Project Coordinator" into the "Job Title" field
+    And I type "Hilton Worldwide" into the "139:0" field
+    And I click the "Submit" button
+    Then I should see a validation message indicating that the phone number is invalid
+
+  Scenario: Successful submission with alternate valid data
+    When I type "Alice" into the "First Name" field
+    And I type "Williams" into the "Last Name" field
+    And I type "alice.williams@example.com" into the "Email" field
+    And I type "alice.williams@example.com" into the "Confirm Email" field
+    And I type "+447911123456" into the "Phone" field
+    And I type "Operations Specialist" into the "Job Title" field
+    And I type "Hilton Honors" into the "139:0" field
+    And I click the "Search" button
+    And I select "Hilton Honors" from the company search results
+    And I click the "Submit" button
+    Then I should see a confirmation message that my request has been submitted successfully

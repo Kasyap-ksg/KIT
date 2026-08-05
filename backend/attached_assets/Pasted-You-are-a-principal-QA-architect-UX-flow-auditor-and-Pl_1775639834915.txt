@@ -1,0 +1,245 @@
+You are a principal QA architect, UX flow auditor, and Playwright automation engineer.
+
+I want you to build a Replit-ready, open-source-only framework that compares a user journey in:
+1. a Figma prototype
+2. my real web application
+
+The purpose is to validate UX flow conformance, not just functional correctness.
+
+## Goal
+For a given journey, the framework must:
+- execute the intended flow on the Figma prototype
+- execute the equivalent flow on the real application
+- fill fields in the real application where needed
+- compare the two paths
+- generate a professional report showing:
+  - intended prototype flow
+  - actual implemented flow
+  - extra steps
+  - detours
+  - validation friction
+  - dead ends
+  - success/failure
+  - overall flow conformance score
+
+## Constraints
+- Replit-friendly
+- Open-source-only
+- Use:
+  - Node.js
+  - TypeScript
+  - Playwright
+  - axe-core
+  - HTML/JSON/Markdown reporting
+- Do not use paid SaaS tools
+- Do not depend on native Figma API auth unless absolutely necessary
+- Prefer config-driven stability over fragile auto-parsing
+
+## Important truth
+Do not claim pixel-perfect equivalence.
+Do not claim full human usability research.
+Frame the result as:
+“prototype-to-implementation flow conformance.”
+
+## Core design approach
+Build this as a config-driven framework.
+
+I will provide:
+- Figma prototype URL
+- application URL
+- journey definitions
+- test data for filling forms
+
+The framework must run the same journey against both environments and compare results.
+
+## What to build
+
+### 1. Project structure
+Create a clean Replit-ready project like:
+
+src/
+  config/
+    journeys.json
+    fieldData.json
+    viewports.json
+    scoring.json
+  runners/
+    figmaRunner.ts
+    appRunner.ts
+  compare/
+    flowComparator.ts
+    scorer.ts
+  audits/
+    accessibilityAudit.ts
+  reports/
+    reportBuilder.ts
+  utils/
+    logger.ts
+    screenshots.ts
+    selectors.ts
+    stepExecutor.ts
+  index.ts
+
+Also include:
+- package.json
+- tsconfig.json
+- playwright.config.ts
+- README.md
+
+### 2. Journey config
+Create a config format where each journey includes:
+- journey name
+- figmaPrototypeUrl
+- appUrl
+- start page/screen
+- step list
+- expected outcome
+- optional success selectors
+- optional error selectors
+
+Each step should support actions like:
+- click
+- fill
+- selectRadio
+- selectCheckbox
+- selectDropdown
+- waitForText
+- waitForSelector
+- assertVisible
+- assertUrlContains
+
+### 3. Prototype runner
+Build a Figma/prototype runner that:
+- opens the prototype URL
+- executes click/navigation steps
+- captures screenshots after every step
+- records the observed screen sequence
+- records whether each step succeeded or failed
+- stores results as structured JSON
+
+Be pragmatic:
+- if field filling is not possible in prototype, allow prototype journey to be modeled as click/view-only
+- support manual mapping of prototype steps through config
+- do not overcomplicate Figma parsing
+
+### 4. Application runner
+Build an app runner that:
+- opens the real app URL
+- executes the same configured journey
+- fills fields using fieldData.json
+- captures screenshots after every step
+- records:
+  - actual screen/page sequence
+  - step success/failure
+  - validation messages
+  - unexpected navigation
+  - dead ends
+  - retries
+  - completion status
+
+### 5. Accessibility audit
+Integrate axe-core on the real app at important screens.
+Capture:
+- critical issues
+- serious issues
+- impacted selectors if available
+- short recommendation text
+
+### 6. Flow comparator
+Create a comparator that compares prototype run vs app run for the same journey.
+
+Compare:
+- step count
+- step order
+- missing steps
+- extra steps
+- unexpected redirects
+- dead ends
+- validation friction
+- recovery issues
+- outcome match
+
+The comparator should produce:
+- journeyDiff
+- friction summary
+- conformance summary
+
+### 7. Scoring
+Create a scoring model with at least:
+- Flow Conformance Score
+- UX Friction Score
+- Accessibility Score
+- Overall UX Conformance Score
+
+Be explicit about formulas.
+Classify result into:
+- Strong match
+- Acceptable with gaps
+- Significant mismatch
+
+### 8. Reporting
+Generate:
+- JSON report
+- Markdown report
+- HTML report
+
+Each report should include:
+1. Executive summary
+2. Journey audited
+3. Prototype path
+4. Application path
+5. Step-by-step differences
+6. Friction points
+7. Accessibility findings
+8. Screenshots/evidence paths
+9. Score summary
+10. Final verdict
+
+### 9. Practical requirements
+- Keep the framework maintainable
+- Prefer readable, modular TypeScript
+- Reuse helper utilities
+- Use environment/config values cleanly
+- Keep selectors configurable
+- Do not hardcode app-specific selectors where avoidable
+- Make it easy to add more journeys later
+
+### 10. First sample journey
+Use a realistic example based on a “Help with login / Request Access” type form journey.
+Include:
+- select one radio option
+- fill first name
+- fill last name
+- fill phone
+- fill email
+- fill confirm email
+- fill job title
+- optionally select company/property if configured
+- submit
+- verify success or expected next state
+
+### 11. Output expected from you
+Generate:
+1. complete codebase
+2. sample config files
+3. working TypeScript modules
+4. README with exact steps to run in Replit
+5. sample report output shape
+
+## Important engineering rules
+- Do not give me only explanations
+- Generate actual code
+- Keep it runnable
+- If any area is uncertain, use config-driven placeholders and document them clearly
+- Be honest about prototype limitations
+- Build the first version for reliability, not over-engineering
+
+## What to do now
+Start by generating:
+1. the final architecture,
+2. the folder structure,
+3. package.json,
+4. tsconfig.json,
+5. playwright config,
+6. sample journey config,
+7. then all source files.

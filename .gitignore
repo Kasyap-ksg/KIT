@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+.venv/
+backend/.venv/
+
+# Environment configurations
+.env
+backend/.env
+frontend/.env
+
+# Build outputs
+dist/
+backend/dist/
+frontend/dist/
+backend/server/public/
+
+# Runtime data
+uploads/
+backend/uploads/
+dev.log
+*.log
+
+# IDE and OS files
+.DS_Store
+.vscode/
+.idea/
+.claude/
+kit-app/
+
+# Archives
+*.tar.gz

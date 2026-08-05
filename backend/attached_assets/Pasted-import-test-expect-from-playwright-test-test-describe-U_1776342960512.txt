@@ -1,0 +1,71 @@
+import { test, expect } from '@playwright/test';
+
+test.describe('User Registration - No Lobby Credentials', () => {
+    test.beforeEach(async ({ page }) => {
+        await page.goto('https://hilton--qa.sandbox.my.site.com/s/request-access', { waitUntil: 'domcontentloaded', timeout: 30000 });
+        await page.locator('label').filter({ hasText: "I am new to Hilton and I don't have Lobby credentials" }).click();
+    });
+
+    test('Successful submission with all required data (happy path)', async ({ page }) => {
+        await page.getByLabel('First Name').fill('John');
+        await page.getByLabel('Last Name').fill('Doe');
+        await page.getByLabel('Email').fill('john.doe@example.com');
+        await page.getByLabel('Confirm Email').fill('john.doe@example.com');
+        await page.getByLabel('Phone').fill('+15551234567');
+        await page.getByLabel('Job Title').fill('IT Manager');
+        await page.getByLabel('139:0').fill('Hilton Worldwide');
+        await page.getByRole('button', { name: 'Search' }).click();
+        await page.getByRole('button', { name: 'Hilton Worldwide' }).click();
+        await page.getByRole('button', { name: 'Submit' }).click();
+    });
+
+    test('Submission blocked when required fields are missing', async ({ page }) => {
+        await page.getByLabel('First Name').fill('');
+        await page.getByLabel('Last Name').fill('Smith');
+        await page.getByLabel('Email').fill('sam.smith@example.com');
+        await page.getByLabel('Confirm Email').fill('sam.smith@example.com');
+        await page.getByLabel('Phone').fill('+15557654321');
+        await page.getByLabel('Job Title').fill('Analyst');
+        await page.getByLabel('139:0').fill('Hilton Worldwide');
+        await page.getByRole('button', { name: 'Submit' }).click();
+        await expect(page.locator('text=First Name')).toBeVisible({ timeout: 30000 });
+    });
+
+    test('Submission blocked for invalid email address', async ({ page }) => {
+        await page.getByLabel('First Name').fill('Emily');
+        await page.getByLabel('Last Name').fill('Clark');
+        await page.getByLabel('Email').fill('notanemail');
+        await page.getByLabel('Confirm Email').fill('notanemail');
+        await page.getByLabel('Phone').fill('+15559876543');
+        await page.getByLabel('Job Title').fill('Sales Lead');
+        await page.getByLabel('139:0').fill('Hilton Worldwide');
+        await page.getByRole('button', { name: 'Submit' }).click();
+        await expect(page.locator('.error-message, [role="alert"], .slds-form-element__help').first()).toBeVisible({ timeout: 10000 });
+    });
+
+    test('Submission blocked for invalid phone number', async ({ page }) => {
+        await page.getByLabel('First Name').fill('Robert');
+        await page.getByLabel('Last Name').fill('Johnson');
+        await page.getByLabel('Email').fill('robert.johnson@example.com');
+        await page.getByLabel('Confirm Email').fill('robert.johnson@example.com');
+        await page.getByLabel('Phone').fill('abc');
+        await page.getByLabel('Job Title').fill('Project Coordinator');
+        await page.getByLabel('139:0').fill('Hilton Worldwide');
+        await page.getByRole('button', { name: 'Submit' }).click();
+        await expect(page.locator('.error-message, [role="alert"], .slds-form-element__help').first()).toBeVisible({ timeout: 10000 });
+    });
+
+    test('Successful submission with alternate valid data', async ({ page }) => {
+        await page.getByLabel('First Name').fill('Alice');
+        await page.getByLabel('Last Name').fill('Williams');
+        await page.getByLabel('Email').fill('alice.williams@example.com');
+        await page.getByLabel('Confirm Email').fill('alice.williams@example.com');
+        await page.getByLabel('Phone').fill('+447911123456');
+        await page.getByLabel('Job Title').fill('Operations Specialist');
+        await page.getByLabel('139:0').fill('Hilton Honors');
+        await page.getByRole('button', { name: 'Search' }).click();
+        await page.getByRole('button', { name: 'Hilton Honors' }).click();
+        await page.getByRole('button', { name: 'Submit' }).click();
+    });
+
+});
